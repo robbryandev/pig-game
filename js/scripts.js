@@ -42,6 +42,7 @@ function endTurn() {
 }
 
 function endGame() {
+    disableButtons();
     setTimeout(() => {
         main.createStartPage(game);
     }, 10000)
@@ -66,9 +67,22 @@ function holdButton() {
 
 // UI logic
 
+function disableButtons() {
+    document.getElementById("roll-btn").setAttribute("disabled", "true");
+    document.getElementById("hold-btn").setAttribute("disabled", "true");
+}
+
+function enableButtons() {
+    document.getElementById("roll-btn").setAttribute("disabled", "false");
+    document.getElementById("hold-btn").setAttribute("disabled", "false");
+}
+
 function setDice() {
     if (game.turn === 1) {
         game.turn = 2;
+        if (game.players[game.turn - 1].bot) {
+            disableButtons();
+        }
         document.getElementById("dice-1").classList.add("invisible");
         document.getElementById("dice-2").classList.remove("invisible");
     } else {
@@ -187,11 +201,13 @@ HTMLDivElement.prototype.createGamePage = function(playerCount) {
 
     let butt1 = document.createElement("button");
     butt1.setAttribute("class", "btn btn-success w-25");
+    butt1.setAttribute("id", "roll-btn");
     butt1.innerText = "Roll!";
     butt1.addEventListener("click", rollButton);
 
     let butt2 = document.createElement("button");
     butt2.setAttribute("class", "btn btn-danger w-25");
+    butt2.setAttribute("id", "hold-btn");
     butt2.innerText = "Hold!";
     butt2.addEventListener("click", holdButton);
 
@@ -268,7 +284,7 @@ HTMLDivElement.prototype.createStartPage = function(game) {
     singleButton.setAttribute("class", "btn btn-info");
     singleButton.innerText = "Single Player";
     singleButton.addEventListener("click", function() {
-        ref.createGamePage(game, 1);
+        ref.createGamePage(1);
     })
     
     let multiButton = document.createElement("button");
@@ -277,7 +293,7 @@ HTMLDivElement.prototype.createStartPage = function(game) {
     multiButton.setAttribute("class", "btn btn-primary ml-2");
     multiButton.innerText = " Multiplayer";
     multiButton.addEventListener("click", function() {
-        ref.createGamePage(game, 2);
+        ref.createGamePage(2);
     })
 
     descriptionLine.appendChild(pDescrition);
