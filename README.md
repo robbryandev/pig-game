@@ -11,3 +11,6 @@
 * explaination of pig game
 * 2 buttons with 1 player and 2 player options
 * Very fancy
+
+# Attributions
+[Dice icons (CC)](https://game-icons.net/tags/dice.html)
