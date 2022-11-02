@@ -1,19 +1,82 @@
 // Buisiness Logic
 function PigGame() {
     this.page = "";
-    this.players = 0;
-    this.turn = 1;
+    this.playerCount = 0;
+    this.players = [];
+    this.turn = 1; 
+}
+
+let game = new PigGame();
+
+function Player(bot) {
+    this.bot = bot;
+    this.tempScore = 0;
+    this.totalScore = 0;
+}
+
+function singlePlayer() {
+    game.players = [];
+    const playerOne = new Player(false);
+    const playerTwo = new Player(true);
+    game.players.push(playerOne);
+    game.players.push(playerTwo);
+}
+
+function multiPlayer() {
+    game.players = [];
+    const playerOne = new Player(false);
+    const playerTwo = new Player(false);
+    game.players.push(playerOne);
+    game.players.push(playerTwo);
+}
+
+function endTurn() {
+    game.players[game.turn - 1].totalScore += game.players[game.turn - 1].tempScore;
+    game.players[game.turn - 1].tempScore = 0;
+    setScore(game.players[game.turn - 1].totalScore); 
+    setDice();
 }
 
 function rollButton() {
-
+    const rand = Math.floor(Math.random() * 6) + 1;
+    setDiceValue(game.turn, rand);
+    if (rand !== 1) {
+        game.players[game.turn - 1].tempScore += rand;
+    } else {
+        game.players[game.turn - 1].tempScore = 0;
+        endTurn();
+    }
 }
 
 function holdButton() {
-
+    endTurn();
 }
 
 // UI logic
+
+function setDice() {
+    if (game.turn === 1) {
+        game.turn = 2;
+        document.getElementById("dice-1").classList.add("invisible");
+        document.getElementById("dice-2").classList.remove("invisible");
+    } else {
+        game.turn = 1;
+        document.getElementById("dice-2").classList.add("invisible");
+        document.getElementById("dice-1").classList.remove("invisible");
+    }
+}
+
+function setDiceValue(turn, num) {
+    document.getElementById(`dice-${turn}`).setAttribute("src", `images/dice-${num}.svg`);
+}
+
+function setScore(score) {
+    document.getElementById(`p${game.turn}-score`).innerText = `Player ${game.turn}: ${score}`
+}
+
+function setCurrent(score) {
+    document.getElementById("current-score").innerText = `Current Roll Value: ${score}`;
+}
 
 HTMLDivElement.prototype.removeAll = function() {
     while (this.lastChild) {
@@ -22,10 +85,15 @@ HTMLDivElement.prototype.removeAll = function() {
 };
 
 
-HTMLDivElement.prototype.createGamePage = function(gameVar, players) {
+HTMLDivElement.prototype.createGamePage = function(playerCount) {
     this.removeAll();
-    gameVar.page = "game";
-    gameVar.players = players;
+    game.page = "game";
+    game.playerCount = playerCount;
+    if (playerCount === 1) {
+        singlePlayer();
+    } else {
+        multiPlayer();
+    }
 
     let div1 = document.createElement("div");
     div1.setAttribute("class", "row");
@@ -72,7 +140,7 @@ HTMLDivElement.prototype.createGamePage = function(gameVar, players) {
     let img1 = document.createElement("img");
     img1.setAttribute("id", "dice-1");
     img1.setAttribute("class", "dice");
-    img1.setAttribute("src", "images/dice-six.svg");
+    img1.setAttribute("src", "images/dice-6.svg");
 
     let divA = document.createElement("div");
     divA.setAttribute("class", "col-2");
@@ -81,9 +149,9 @@ HTMLDivElement.prototype.createGamePage = function(gameVar, players) {
     divB.setAttribute("class", "col-3");
 
     let img2 = document.createElement("img");
-    img2.setAttribute("id", "dice-1");
+    img2.setAttribute("id", "dice-2");
     img2.setAttribute("class", "dice invisible");
-    img2.setAttribute("src", "images/dice-six.svg");
+    img2.setAttribute("src", "images/dice-6.svg");
 
     let divC = document.createElement("div");
     divC.setAttribute("class", "col-2");
@@ -118,6 +186,16 @@ HTMLDivElement.prototype.createGamePage = function(gameVar, players) {
     let divG = document.createElement("div");
     divG.setAttribute("class", "col-3");
 
+    let currentDiv = document.createElement("div");
+    currentDiv.setAttribute("class", "mt-4");
+    
+    let currentScoreElement = document.createElement("h4");
+    currentScoreElement.setAttribute("id", "current-score");
+    currentScoreElement.setAttribute("class", "text-center");
+    currentScoreElement.innerText = "Current Roll Value: 0";
+
+    currentDiv.appendChild(currentScoreElement);
+
     div3.appendChild(h3P1Score);
     div5.appendChild(h3P2Score);
 
@@ -144,16 +222,16 @@ HTMLDivElement.prototype.createGamePage = function(gameVar, players) {
         divD.appendChild(row3Elements[e]);
     }
 
-    const elements = [div1, hr, br1, div7, br2, br3, br4, br5, divD];
+    const elements = [div1, hr, br1, div7, br2, br3, br4, br5, divD, currentDiv];
     for (const e in elements) {
         this.appendChild(elements[e]);
     }
 };
 
-HTMLDivElement.prototype.createStartPage = function(gameVar) {
+HTMLDivElement.prototype.createStartPage = function(game) {
     const ref = this;
     this.removeAll();
-    gameVar.page = "start";
+    game.page = "start";
 
     let title = document.createElement("h1");
     title.setAttribute("class", "text-center");
@@ -178,7 +256,7 @@ HTMLDivElement.prototype.createStartPage = function(gameVar) {
     singleButton.setAttribute("class", "btn btn-info");
     singleButton.innerText = "Single Player";
     singleButton.addEventListener("click", function() {
-        ref.createGamePage(gameVar, 1);
+        ref.createGamePage(game, 1);
     })
     
     let multiButton = document.createElement("button");
@@ -187,7 +265,7 @@ HTMLDivElement.prototype.createStartPage = function(gameVar) {
     multiButton.setAttribute("class", "btn btn-primary ml-2");
     multiButton.innerText = " Multiplayer";
     multiButton.addEventListener("click", function() {
-        ref.createGamePage(gameVar, 2);
+        ref.createGamePage(game, 2);
     })
 
     descriptionLine.appendChild(pDescrition);
@@ -202,6 +280,5 @@ HTMLDivElement.prototype.createStartPage = function(gameVar) {
 
 addEventListener("load", function() {
     const main = document.querySelector(".container");
-    let game = new PigGame();
     main.createStartPage(game);
 });
