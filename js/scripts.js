@@ -3,7 +3,7 @@ function PigGame() {
     this.page = "";
     this.playerCount = 0;
     this.players = [];
-    this.turn = 1; 
+    this.turn = 1;
 }
 
 let game = new PigGame();
@@ -34,16 +34,28 @@ function endTurn() {
     game.players[game.turn - 1].totalScore += game.players[game.turn - 1].tempScore;
     game.players[game.turn - 1].tempScore = 0;
     setScore(game.players[game.turn - 1].totalScore); 
-    setDice();
+    if (game.players[game.turn - 1].totalScore >= 100) {
+        endGame();
+    } else {
+        setDice();
+    }
 }
+
+function endGame() {
+    setTimeout(() => {
+        main.createStartPage(game);
+    }, 10000)
+};
 
 function rollButton() {
     const rand = Math.floor(Math.random() * 6) + 1;
     setDiceValue(game.turn, rand);
     if (rand !== 1) {
         game.players[game.turn - 1].tempScore += rand;
+        setCurrent(game.players[game.turn - 1].tempScore);
     } else {
         game.players[game.turn - 1].tempScore = 0;
+        setCurrent(0);
         endTurn();
     }
 }
@@ -279,6 +291,6 @@ HTMLDivElement.prototype.createStartPage = function(game) {
 };
 
 addEventListener("load", function() {
-    const main = document.querySelector(".container");
+    main = document.querySelector(".container");
     main.createStartPage(game);
 });
