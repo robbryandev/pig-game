@@ -38,7 +38,19 @@ function multiPlayer() {
 }
 
 function easyBot() {
+    setTimeout(function() {
+        let rollCheck = rollButton()
+        if (rollCheck !== 1) {
+            setTimeout(function() {
+                let check2 = rollButton();
+                if (check2 !== 1) {
+                    holdButton();
+                }
+            }, 500);
+        }
+    }, 500);
 
+    enableButtons();
 }
 
 function hardBot() {
@@ -46,11 +58,14 @@ function hardBot() {
 }
 
 function runBot() {
-    if (game.botDiff === 1) {
-        easyBot();
-    } else {
-        hardBot();
-    }
+    disableButtons();
+    setTimeout(function() {
+        if (game.botDiff === 1) {
+            easyBot();
+        } else {
+            hardBot();
+        }
+    }, 1500);
 }
 
 // End the current players turn
@@ -67,8 +82,10 @@ function endTurn() {
         }
         if (game.playerCount === 2) {
             enableButtons();
-        } else if (game.turn === 1) {
+        } else if (game.turn === 2) {
             runBot();
+        } else {
+            enableButtons();
         }
     }, 2000);
 }
@@ -93,6 +110,7 @@ function rollButton() {
         setCurrent(0);
         endTurn();
     }
+    return rand;
 }
 
 // function that runs when the hold button click event fires
