@@ -54,8 +54,32 @@ function easyBot() {
 }
 
 function hardBot() {
-
-}
+    if (game.players[1].totalScore >= game.players[0].totalScore) {
+        easyBot()
+    }
+    else {
+        let roll;
+        let run = true;
+        let hardTimer = setInterval(function(){
+            console.log("score: ");
+            console.log(game.players[1].tempScore);
+            if (roll === 1) {
+                run = false;
+                clearInterval(hardTimer);
+            }
+            if (game.players[1].tempScore <= 20 && game.turn === 2) {
+                if (run) {
+                    roll = rollButton();
+                }
+            } else {
+                if (game.turn === 2) {
+                    holdButton();
+                }
+                clearInterval(hardTimer);
+            }
+        }, 500);
+    };
+};
 
 function runBot() {
     disableButtons();
