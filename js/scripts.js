@@ -397,7 +397,19 @@ HTMLDivElement.prototype.createStartPage = function(game) {
 
     let pDescrition = document.createElement("p");
     pDescrition.setAttribute("class", "text-center");
-    pDescrition.innerText = "I'll get there";
+    pDescrition.innerText = "Pig Dice! But what is Pig Dice? How did it come about? No one knows. Don't fact check us. But we can tell you how to play.";
+
+    let pDescrition1 = document.createElement("p");
+    pDescrition1.setAttribute("class", "text-center");
+    pDescrition1.innerText = "Pig Dice is played with, traditionally, two players and one die. The first player to *100* wins, but there are stipulations. If you roll your six sided die and get anything from TWO to SIX you can either roll again, adding the die together as many times as youd like...UNLESS: If you roll a ONE you ose the score of all the die you rolled on this turn."
+
+    let pDescrition2 = document.createElement("p");
+    pDescrition2.setAttribute("class", "text-center");
+    pDescrition2.innerText = "You do have the option to pass at any time, saving the total of the die rolled on this turn into your total and passing the die to your opponent. Give it a try!"
+
+    let pDescrition3 = document.createElement("p");
+    pDescrition3.setAttribute("class", "text-center");
+    pDescrition3.innerText = "You have your choice of multiplayer OR two levels of difficulty in single player mode. Good luck!"
 
     let divButtons = document.createElement("div");
     divButtons.setAttribute("class", "text-center mt-4");
@@ -423,6 +435,9 @@ HTMLDivElement.prototype.createStartPage = function(game) {
     })
 
     descriptionLine.appendChild(pDescrition);
+    descriptionLine.appendChild(pDescrition1);
+    descriptionLine.appendChild(pDescrition2);
+    descriptionLine.appendChild(pDescrition3);
     divButtons.appendChild(singleButton);
     divButtons.appendChild(multiButton);
     
@@ -431,6 +446,7 @@ HTMLDivElement.prototype.createStartPage = function(game) {
         this.appendChild(elements[e]);
     }
 };
+
 // When the page loads render the start screen
 addEventListener("load", function() {
     main = document.querySelector(".container");
