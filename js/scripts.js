@@ -4,6 +4,7 @@
 function PigGame() {
     this.page = "";
     this.playerCount = 0;
+    this.botDiff = 0;
     this.players = [];
     this.turn = 1;
 }
@@ -36,6 +37,22 @@ function multiPlayer() {
     game.players.push(playerTwo);
 }
 
+function easyBot() {
+
+}
+
+function hardBot() {
+
+}
+
+function runBot() {
+    if (game.botDiff === 1) {
+        easyBot();
+    } else {
+        hardBot();
+    }
+}
+
 // End the current players turn
 function endTurn() {
     disableButtons();
@@ -48,7 +65,11 @@ function endTurn() {
         } else {
             setDice();
         }
-        enableButtons();
+        if (game.playerCount === 2) {
+            enableButtons();
+        } else if (game.turn === 1) {
+            runBot();
+        }
     }, 2000);
 }
 
@@ -93,6 +114,38 @@ function enableButtons() {
     document.getElementById("hold-btn").removeAttribute("disabled");
 }
 
+function difficultyButtons(divElement) {
+    const buttonDiv = document.getElementById("single").parentElement;
+    while (buttonDiv.lastChild) {
+        buttonDiv.removeChild(buttonDiv.lastChild);
+    }
+
+    // Easy button
+    let easyButton = document.createElement("button");
+    easyButton.setAttribute("type", "button");
+    easyButton.setAttribute("id", "easy-bot");
+    easyButton.setAttribute("class", "btn btn-success");
+    easyButton.innerText = "Easy";
+    easyButton.addEventListener("click", function() {
+        game.botDiff = 1;
+        divElement.createGamePage(1);
+    });
+
+    // Hard button
+    let hardButton = document.createElement("button");
+    hardButton.setAttribute("type", "button");
+    hardButton.setAttribute("id", "hard-bot");
+    hardButton.setAttribute("class", "btn btn-danger");
+    hardButton.innerText = "Hard";
+    hardButton.addEventListener("click", function() {
+        game.botDiff = 2;
+        divElement.createGamePage(1);
+    });
+
+    buttonDiv.appendChild(easyButton);
+    buttonDiv.appendChild(hardButton);
+}
+
 // Hides dice for the player when it's not their turn
 function setDice() {
     if (game.turn === 1) {
@@ -116,7 +169,11 @@ function setDiceValue(turn, num) {
 
 // Renders the total score of both players
 function setScore(score) {
-    document.getElementById(`p${game.turn}-score`).innerText = `Player ${game.turn}: ${score}`
+    if (!game.players[game.turn - 1].bot) {
+        document.getElementById(`p${game.turn}-score`).innerText = `Player ${game.turn}: ${score}`
+    } else {
+        document.getElementById(`p${game.turn}-score`).innerText = `Bot: ${score}`
+    }
 }
 
 // Renders the current score value for the current player
@@ -165,7 +222,11 @@ HTMLDivElement.prototype.createGamePage = function(playerCount) {
     let h3P2Score = document.createElement("h3");
     h3P2Score.setAttribute("id", "p2-score");
     h3P2Score.setAttribute("class", "ml-5");
-    h3P2Score.innerText = "Player 2: ";
+    if (game.playerCount === 2) {
+        h3P2Score.innerText = "Player 2: ";
+    } else {
+        h3P2Score.innerText = "Bot: ";
+    }
 
     let div6 = document.createElement("div");
     div6.setAttribute("class", "col-2");
@@ -299,15 +360,17 @@ HTMLDivElement.prototype.createStartPage = function(game) {
     let divButtons = document.createElement("div");
     divButtons.setAttribute("class", "text-center mt-4");
 
+    // Single Player button
     let singleButton = document.createElement("button");
     singleButton.setAttribute("type", "button");
     singleButton.setAttribute("id", "single");
     singleButton.setAttribute("class", "btn btn-info");
     singleButton.innerText = "Single Player";
     singleButton.addEventListener("click", function() {
-        ref.createGamePage(1);
+        difficultyButtons(ref);
     })
     
+    // Multi Player button
     let multiButton = document.createElement("button");
     multiButton.setAttribute("type", "button");
     multiButton.setAttribute("id", "multi");
