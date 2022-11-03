@@ -1,4 +1,6 @@
 // Buisiness Logic
+
+// PigGame object constructor
 function PigGame() {
     this.page = "";
     this.playerCount = 0;
@@ -6,14 +8,17 @@ function PigGame() {
     this.turn = 1;
 }
 
+// Globla PigGame object
 let game = new PigGame();
 
+// Player object constructor
 function Player(bot) {
     this.bot = bot;
     this.tempScore = 0;
     this.totalScore = 0;
 }
 
+// Sets the player objects for 1 non bot player and 1 bot player for the PigGame object
 function singlePlayer() {
     game.players = [];
     const playerOne = new Player(false);
@@ -22,6 +27,7 @@ function singlePlayer() {
     game.players.push(playerTwo);
 }
 
+// Sets the player objects for 2 non bot players inside the PigGame object
 function multiPlayer() {
     game.players = [];
     const playerOne = new Player(false);
@@ -30,17 +36,23 @@ function multiPlayer() {
     game.players.push(playerTwo);
 }
 
+// End the current players turn
 function endTurn() {
-    game.players[game.turn - 1].totalScore += game.players[game.turn - 1].tempScore;
-    game.players[game.turn - 1].tempScore = 0;
-    setScore(game.players[game.turn - 1].totalScore); 
-    if (game.players[game.turn - 1].totalScore >= 100) {
-        endGame();
-    } else {
-        setDice();
-    }
+    disableButtons();
+    setTimeout(function() {
+        game.players[game.turn - 1].totalScore += game.players[game.turn - 1].tempScore;
+        game.players[game.turn - 1].tempScore = 0;
+        setScore(game.players[game.turn - 1].totalScore); 
+        if (game.players[game.turn - 1].totalScore >= 100) {
+            endGame();
+        } else {
+            setDice();
+        }
+        enableButtons();
+    }, 2000);
 }
 
+// End the game
 function endGame() {
     disableButtons();
     setTimeout(() => {
@@ -48,6 +60,7 @@ function endGame() {
     }, 10000)
 };
 
+// function that runs when the roll button clikc event fires 
 function rollButton() {
     const rand = Math.floor(Math.random() * 6) + 1;
     setDiceValue(game.turn, rand);
@@ -61,22 +74,26 @@ function rollButton() {
     }
 }
 
+// function that runs when the hold button click event fires
 function holdButton() {
     endTurn();
 }
 
 // UI logic
 
+// Disables the roll and hold buttons
 function disableButtons() {
     document.getElementById("roll-btn").setAttribute("disabled", "true");
     document.getElementById("hold-btn").setAttribute("disabled", "true");
 }
 
+// Enables the roll and hold buttons
 function enableButtons() {
-    document.getElementById("roll-btn").setAttribute("disabled", "false");
-    document.getElementById("hold-btn").setAttribute("disabled", "false");
+    document.getElementById("roll-btn").removeAttribute("disabled");
+    document.getElementById("hold-btn").removeAttribute("disabled");
 }
 
+// Hides dice for the player when it's not their turn
 function setDice() {
     if (game.turn === 1) {
         game.turn = 2;
@@ -92,25 +109,29 @@ function setDice() {
     }
 }
 
+// Renders the correct dice image on the side of the current player
 function setDiceValue(turn, num) {
     document.getElementById(`dice-${turn}`).setAttribute("src", `images/dice-${num}.svg`);
 }
 
+// Renders the total score of both players
 function setScore(score) {
     document.getElementById(`p${game.turn}-score`).innerText = `Player ${game.turn}: ${score}`
 }
 
+// Renders the current score value for the current player
 function setCurrent(score) {
     document.getElementById("current-score").innerText = `Current Roll Value: ${score}`;
 }
 
+// Div method to remove all of it's child elements
 HTMLDivElement.prototype.removeAll = function() {
     while (this.lastChild) {
         this.removeChild(this.lastChild);
     }
 };
 
-
+// Div method to render the game page
 HTMLDivElement.prototype.createGamePage = function(playerCount) {
     this.removeAll();
     game.page = "game";
@@ -255,7 +276,7 @@ HTMLDivElement.prototype.createGamePage = function(playerCount) {
         this.appendChild(elements[e]);
     }
 };
-
+// Div method to render the start page
 HTMLDivElement.prototype.createStartPage = function(game) {
     const ref = this;
     this.removeAll();
@@ -305,7 +326,7 @@ HTMLDivElement.prototype.createStartPage = function(game) {
         this.appendChild(elements[e]);
     }
 };
-
+// When the page loads render the start screen
 addEventListener("load", function() {
     main = document.querySelector(".container");
     main.createStartPage(game);
