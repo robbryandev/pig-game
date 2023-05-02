@@ -1,4 +1,4 @@
-# [Pig Game](https://oz-mollerstuen.github.io/pig-game)
+# [Pig Game](https://robbryandev.github.io/pig-game/)
 
 ## Contributers
 * Lucas Mollerstuen
@@ -37,19 +37,12 @@ You have your choice of multiplayer OR two levels of difficulty in single player
 * Rolling a 1 clears the players current score
 * When a player gets a score of 100 or more every other player gets a final chance
 
-## Dynamic plan
-
-### Main page
-* explaination of pig game
-* 2 buttons with 1 player and 2 player options
-* Very fancy
-
 # Attributions
 [Dice icons (CC)](https://game-icons.net/tags/dice.html)
 
 ## License
 
-Copyright (c) <2022> <Lucas Mollerstuen, Robert Bryan>
+Copyright (c) <2023> <Lucas Mollerstuen, Robert Bryan>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
