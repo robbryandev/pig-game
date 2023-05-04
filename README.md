@@ -26,7 +26,17 @@ You have your choice of multiplayer OR two levels of difficulty in single player
 
 ## Setup/Installation Requirements
 
-- Download from Github, open index.html in your favorite browser;
+- Install packages
+
+```bash
+  pnpm i
+```
+
+- Start app
+
+```bash
+  pnpm run dev
+```
 
 ## Known Bugs
 
