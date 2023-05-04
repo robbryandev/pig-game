@@ -1,5 +1,6 @@
 import { BlitzPage } from "@blitzjs/next"
 import Link from "next/link"
+import Head from "next/head"
 import { useState } from "react"
 
 /*
@@ -11,6 +12,9 @@ const Home: BlitzPage = () => {
   const [showDifficulty, setShowDifficulty] = useState(false)
   return (
     <div className="page">
+      <Head>
+        <title>Pig Dice</title>
+      </Head>
       <div className="flex flex-row justify-center my-4">
         <div className="max-w-md text-center md:max-w-4xl">
           <p className="text-4xl font-semibold">Pig Dice</p>

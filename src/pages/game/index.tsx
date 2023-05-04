@@ -2,6 +2,7 @@ import { dice } from "@/utils/images"
 import { useRouter } from "next/router"
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
+import Head from "next/head"
 
 export type Player = {
   isBot: boolean
@@ -45,22 +46,24 @@ export default function Game() {
   }
   const handleRoll = () => {
     const newRoll = Math.floor(Math.random() * 6)
-    if (!!turn.player) {
-      setBotRoll(botRoll + 1)
-    }
-    setTurn({ ...turn, roll: newRoll })
-    if (newRoll + 1 != 1) {
-      !!turn.player
-        ? setPlayers([
-            players[0]!,
-            { ...players[1]!, tempScore: players[1]!.tempScore + newRoll + 1 },
-          ])
-        : setPlayers([
-            { ...players[0]!, tempScore: players[0]!.tempScore + newRoll + 1 },
-            players[1]!,
-          ])
-    } else {
-      changeTurn(false)
+    if (!won.won) {
+      if (!!turn.player) {
+        setBotRoll(botRoll + 1)
+      }
+      setTurn({ ...turn, roll: newRoll })
+      if (newRoll + 1 != 1) {
+        !!turn.player
+          ? setPlayers([
+              players[0]!,
+              { ...players[1]!, tempScore: players[1]!.tempScore + newRoll + 1 },
+            ])
+          : setPlayers([
+              { ...players[0]!, tempScore: players[0]!.tempScore + newRoll + 1 },
+              players[1]!,
+            ])
+      } else {
+        changeTurn(false)
+      }
     }
   }
   const easy = useRef(true)
@@ -124,6 +127,9 @@ export default function Game() {
   }, [won])
   return (
     <div className="page">
+      <Head>
+        <title>Pig Dice</title>
+      </Head>
       {/* Scores */}
       <div className="w-1/2 mx-auto">
         <div className="grid grid-flow-row grid-cols-2 mt-4 space-x-6 text-2xl font-medium text-center md:text-3xl">
